@@ -1,23 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabaseClient";
+import { useCoupleId } from "@/lib/useCouple";
 
 export default function CalendarPage() {
   const supabase = createSupabaseClient();
-  const [events, setEvents] = useState<any[]>([]);
+  const { coupleId } = useCoupleId();
+  type EventRow = { id: string; title: string; event_date: string };
+  const [events, setEvents] = useState<EventRow[]>([]);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase.from("events").select("*").order("event_date");
-      setEvents(data || []);
+      const { data } = await supabase.from("events").select("id, title, event_date").eq("couple_id", coupleId).order("event_date");
+      setEvents((data as EventRow[]) || []);
     };
-    load();
-  }, [supabase]);
+    if (coupleId) load();
+  }, [supabase, coupleId]);
 
   const add = async () => {
-    await supabase.from("events").insert({ title, event_date: date } as any);
+    if (!coupleId) return;
+    await supabase.from("events").insert({ title, event_date: date, couple_id: coupleId });
     setTitle("");
     setDate("");
   };

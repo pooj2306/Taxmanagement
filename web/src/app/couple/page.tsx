@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import { nanoid } from "nanoid/non-secure";
 
+export const dynamic = "force-dynamic";
+
 export default function CouplePage() {
   const supabase = createSupabaseClient();
   const [code, setCode] = useState("");

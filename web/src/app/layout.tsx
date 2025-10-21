@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
+import AdBar from "@/components/AdBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,16 +29,20 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <header className="border-b">
           <div className="mx-auto max-w-5xl p-4 flex items-center justify-between">
-            <a href="/" className="font-semibold">EverBloom</a>
+            <Link href="/" className="font-semibold">EverBloom</Link>
             <nav className="space-x-4 text-sm">
-              <a href="/games" className="hover:underline">Games</a>
-              <a href="/calendar" className="hover:underline">Calendar</a>
-              <a href="/diary" className="hover:underline">Diary</a>
-              <a href="/video" className="hover:underline">Video</a>
-              <a href="/login" className="hover:underline">Login</a>
+              <Link href="/games" className="hover:underline">Games</Link>
+              <Link href="/calendar" className="hover:underline">Calendar</Link>
+              <Link href="/diary" className="hover:underline">Diary</Link>
+              <Link href="/video" className="hover:underline">Video</Link>
+              <Link href="/couple" className="hover:underline">Couple</Link>
+              <Link href="/pricing" className="hover:underline">Pricing</Link>
+              <Link href="/surprises" className="hover:underline">Surprises</Link>
+              <Link href="/login" className="hover:underline">Login</Link>
             </nav>
           </div>
         </header>
+        <AdBar />
         <main className="mx-auto max-w-5xl p-4">{children}</main>
       </body>
     </html>

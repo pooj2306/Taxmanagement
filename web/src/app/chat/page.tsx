@@ -1,11 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabaseClient";
+import { useCoupleId } from "@/lib/useCouple";
 
 type Message = { id: string; content: string; sender_id: string; created_at: string };
 
+export const dynamic = "force-dynamic";
+
 export default function ChatPage() {
   const supabase = createSupabaseClient();
+  const { coupleId } = useCoupleId();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
@@ -15,8 +19,11 @@ export default function ChatPage() {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chat_messages" },
-        (payload) => {
-          setMessages((prev) => [...prev, payload.new as any]);
+        (payload: { new: unknown }) => {
+        const m = payload.new as unknown as Message & { couple_id?: string | null };
+        if (!coupleId || m.couple_id === coupleId) {
+          setMessages((prev) => [...prev, m]);
+        }
         }
       )
       .subscribe();
@@ -24,7 +31,7 @@ export default function ChatPage() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, [supabase, coupleId]);
 
   const send = async () => {
     const {
@@ -34,8 +41,8 @@ export default function ChatPage() {
     await supabase.from("chat_messages").insert({
       content: input,
       sender_id: user.id,
-      couple_id: null, // TODO: set couple
-    } as any);
+      couple_id: coupleId,
+    });
     setInput("");
   };
 

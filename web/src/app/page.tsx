@@ -10,6 +10,8 @@ export default function HomePage() {
         <a className="border rounded p-4 hover:bg-gray-50" href="/calendar">Shared Calendar</a>
         <a className="border rounded p-4 hover:bg-gray-50" href="/diary">Diaries</a>
         <a className="border rounded p-4 hover:bg-gray-50" href="/date-ideas">Date Ideas</a>
+        <a className="border rounded p-4 hover:bg-gray-50" href="/couple">Pair with Partner</a>
+        <a className="border rounded p-4 hover:bg-gray-50" href="/pricing">Go EverBloom+</a>
       </div>
     </div>
   );
