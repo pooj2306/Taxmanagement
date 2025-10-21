@@ -1,24 +1,34 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabaseClient";
+import { useCoupleId } from "@/lib/useCouple";
+
+export const dynamic = "force-dynamic";
 
 export default function DiaryPage() {
   const supabase = createSupabaseClient();
-  const [entries, setEntries] = useState<any[]>([]);
+  const { coupleId } = useCoupleId();
+  type Entry = { id: string; body: string; created_at: string };
+  const [entries, setEntries] = useState<Entry[]>([]);
   const [body, setBody] = useState("");
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase.from("diary_entries").select("*").order("created_at", { ascending: false });
-      setEntries(data || []);
+      const { data } = await supabase
+        .from("diary_entries")
+        .select("id, body, created_at")
+        .eq("couple_id", coupleId)
+        .order("created_at", { ascending: false });
+      setEntries((data as Entry[]) || []);
     };
-    load();
-  }, [supabase]);
+    if (coupleId) load();
+  }, [supabase, coupleId]);
 
   const add = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
-    await supabase.from("diary_entries").insert({ body, author_id: user.id } as any);
+    if (!coupleId) return;
+    await supabase.from("diary_entries").insert({ body, author_id: user.id, couple_id: coupleId });
     setBody("");
   };
 

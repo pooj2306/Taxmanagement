@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabaseClient";
+import { useCoupleId } from "@/lib/useCouple";
 
 export default function VideoPage() {
   const supabase = createSupabaseClient();
+  const { coupleId } = useCoupleId();
   const localRef = useRef<HTMLVideoElement>(null);
   const remoteRef = useRef<HTMLVideoElement>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
@@ -25,6 +27,7 @@ export default function VideoPage() {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     if (localRef.current) localRef.current.srcObject = stream;
     stream.getTracks().forEach((t) => pcRef.current?.addTrack(t, stream));
+    // TODO: publish offer via rtc_signals where couple_id = coupleId
   };
 
   return (

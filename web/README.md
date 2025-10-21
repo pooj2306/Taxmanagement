@@ -14,6 +14,12 @@ A minimal, low-cost relationship app MVP: chat, games, P2P video, shared calenda
    cp .env.example .env.local
    ```
    Fill `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`. For subscriptions, add Stripe keys.
+   Required keys:
+   - `STRIPE_SECRET_KEY`
+   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+   - `STRIPE_PRICE_ID`
+   - `STRIPE_WEBHOOK_SECRET` (from `stripe listen` or Dashboard)
+   - `SUPABASE_SERVICE_ROLE_KEY` (for webhook upserts)
 
 2. Create Supabase project and run schema:
    - Open Supabase SQL editor and run `supabase/schema.sql`.
@@ -34,6 +40,7 @@ A minimal, low-cost relationship app MVP: chat, games, P2P video, shared calenda
 - Diaries (`/diary`)
 - Date ideas (`/date-ideas`) + house ads (`/api/ads`)
 - Stripe checkout endpoint (`/api/stripe/create-checkout`) – set `STRIPE_PRICE_ID`
+ - Stripe webhook (`/api/stripe/webhook`) – updates `public.subscriptions`
 
 ## Notes on Ads vs Subscription
 - Free users: banner ad on search pages and interstitial per search.

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { createSupabaseClient } from "@/lib/supabaseClient";
 
+export const dynamic = "force-dynamic";
+
 export default function SignupPage() {
   const supabase = createSupabaseClient();
   const [email, setEmail] = useState("");
